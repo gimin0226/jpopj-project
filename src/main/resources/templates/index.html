@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPOPJ - J-POP Community</title>
+    <style>
+        body { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; margin: 0; background-color: #f4f4f4; }
+        a { text-decoration: none; color: inherit; }
+        .header { background-color: #fff; padding: 15px 30px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; }
+        .logo { font-weight: bold; font-size: 24px; color: #333; }
+        .tag-nav { background-color: #fff; padding: 10px 30px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tag-nav ul { margin: 0; padding: 0; list-style: none; display: flex; }
+        .tag-nav li { margin-right: 25px; font-size: 16px; font-weight: 500; cursor: pointer; padding: 8px 4px; border-bottom: 3px solid transparent; transition: all 0.2s ease-in-out; }
+        .tag-nav li a { display: block; } /* a 태그가 li 영역 전체를 차지하도록 */
+        .tag-nav li:hover, .tag-nav li.active { color: #007bff; border-bottom: 3px solid #007bff; }
+        .main-content { padding: 20px 30px; }
+        .post-list-container { background-color: #fff; border-radius: 5px; padding: 20px; }
+        .post-item { border-bottom: 1px solid #eee; padding: 15px 5px; }
+        .post-item:last-child { border-bottom: none; }
+        .post-title { font-size: 18px; font-weight: bold; color: #333; }
+        .post-meta { font-size: 12px; color: #888; margin-top: 5px; }
+        .no-post { padding: 40px; text-align: center; color: #777; }
+        li{list-style: none;}
+        /* 마지막 버튼만 오른쪽 끝에 고정하려면 */
+        .write-btn-container {
+            margin-left: auto;
+        }
+
+        /* 버튼 스타일 커스터마이징 */
+        .write-btn {
+            background-color: #4CAF50;  /* 초록색 배경 */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .write-btn:hover {
+            background-color: #45a049;  /* 마우스 올렸을 때 */
+        }
+
+        .profile-icon img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%; /* 동그랗게 */
+            object-fit: cover;
+            vertical-align: middle;
+        }
+
+        /* 로그인 버튼 컨테이너 정렬 (선택) */
+        .login-btn-container {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto; /* 우측 정렬 */
+            padding: 0 10px;
+        }
+
+        /* 로그인 버튼 스타일 */
+        .login-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* 호버 시 효과 */
+        .login-btn:hover {
+            background-color: #357ab8;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <li class="logo"><a href="/">JPOPJ</a></li>
+    <li class="login-btn-container">
+        <a th:if="${session.user==null}" th:href="@{/login}" class="login-btn">로그인</a>
+
+        <a th:if="${session.user != null}" th:href = "@{/profile}" class="profile-icon">
+            <img src="/images/user-icon2.png" alt="내 정보" width="33px"/>
+        </a>
+    </li>
+</header>
+
+<nav class="tag-nav">
+    <ul>
+        <li th:classappend="${activeCategory == 'NEW' ? 'active' : ''}"><a th:href="@{/NEW}">NEW</a></li>
+        <li th:classappend="${activeCategory == 'ARTIST' ? 'active' : ''}"><a th:href="@{/ARTIST}">ARTIST</a></li>
+        <li th:classappend="${activeCategory == 'REVIEW' ? 'active' : ''}"><a th:href="@{/REVIEW}">REVIEW</a></li>
+        <li th:classappend="${activeCategory == 'TALK' ? 'active' : ''}"><a th:href="@{/TALK}">TALK</a></li>
+        <li th:classappend="${activeCategory == 'CONCERT' ? 'active' : ''}"><a th:href="@{/CONCERT}">CONCERT</a></li>
+        <li class="write-btn-container">
+            <a th:href="@{/write}" class="write-btn">글 작성하기</a>
+        </li>
+    </ul>
+</nav>
+
+<main class="main-content">
+    <div id="post-list" class="post-list-container">
+
+        <th:block th:if="${!posts.isEmpty()}">
+            <div th:each="post : ${posts}" class="post-item">
+                <div class="post-title">
+                    <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">게시물 제목</a>
+                </div>
+                <div class="post-meta">
+                    <span>작성자: </span><span th:text="${post.author}">작성자</span> |
+                    <span>날짜: </span><span th:text="${post.date}">날짜</span>
+                </div>
+            </div>
+        </th:block>
+
+        <div th:if="${posts.isEmpty()}" class="no-posts">
+            <p>아직 게시물이 없습니다.</p>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>
+
+<!-- Thymeleaf에서 ${session.xxx} 사용할 수 있는 이유-->
+<!--
+아주 중요한 질문이에요! 정답부터 말하면:
+
+❌ 아니요. session 객체는 Model을 통해 가져오는 것이 아닙니다.
+✅ HttpSession 또는 Spring이 자동으로 바인딩해주는 session 객체를 통해 접근하는 것입니다.
+
+✅ 정리: Spring MVC에서 세션 데이터는 어디서 오는가?
+1. Thymeleaf에서 ${session.xxx} 사용할 수 있는 이유
+Thymeleaf는 아래와 같은 스프링 제공 객체들을 자동으로 사용할 수 있게 해줘요:
+
+표현식	의미
+${session}	HttpSession 객체
+${request}	HttpServletRequest
+${param}	요청 파라미터
+${model}	Model에 들어있는 값들
+
+즉, ${session.user}는 HttpSession.getAttribute("user")에 접근하는 것과 똑같습니다.
+
+👉 이는 Model에 넣지 않아도 session이 자동으로 보입니다.
+
+✅ 예시: 서버 측 코드
+java
+복사
+편집
+@GetMapping("/profile")
+public String profile(HttpSession session) {
+    SessionUser user = (SessionUser) session.getAttribute("user");
+    System.out.println(user.getName());
+    return "profile";
+}
+or
+
+java
+복사
+편집
+@GetMapping("/profile")
+public String profile(@SessionAttribute("user") SessionUser user) {
+    // 세션에 저장된 user 자동 주입
+    return "profile";
+}
+✅ 예시: Thymeleaf에서 확인
+html
+복사
+편집
+<span th:text="${session.user.name}">사용자 이름</span>
+이건 HttpSession.getAttribute("user") → user.getName()과 같은 의미예요.
+
+✅ 요약
+session 객체는 Model과는 별개입니다.
+
+session은 HttpSession에 저장된 전역 값들을 의미하고,
+
+Thymeleaf는 Spring이 자동으로 session, request 등을 context에 등록해주기 때문에 바로 ${session.xxx}로 사용할 수 있습니다.
+
+Model은 요청 처리 중 임시로 사용하는 것이고, 세션은 여러 요청 간 공유하는 저장소입니다.
+
+필요하시면 Model, ModelAndView, HttpSession, @SessionAttribute 간 차이점도 한 번에 정리해드릴게요!
+
+-->
