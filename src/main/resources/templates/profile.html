@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>사용자 정보</title>
+    <link rel="stylesheet" th:href="@{/css/profile.css}" />
+    <script th:src="@{/js/profile.js}" defer></script>
+</head>
+<body>
+<div class="container">
+    <!-- 프로필 이미지: 없으면 기본 이미지 -->
+    <img th:if="${#strings.isEmpty(session.user.picture)}"
+         th:src="@{/images/user-icon2.png}"
+         alt="기본 프로필" class="profile-image" />
+
+    <img th:if="${!#strings.isEmpty(session.user.picture)}"
+         th:src="${session.user.picture}"
+         alt="프로필" class="profile-image" />
+
+    <!-- 사용자 정보 -->
+    <div class="username" th:text="${session.user.name}">사용자 이름</div>
+    <div class="email" th:text="${session.user.email}">사용자 이메일</div>
+
+    <a href="/" class="btn-home">🏠 홈으로</a>
+</div>
+</body>
+</html>

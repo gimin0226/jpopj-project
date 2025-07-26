@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>Chap14</title>
+</head>
+<body>
+<div>
+    <h3>JPA 데이터베이스</h3>
+    <a th:href="@{/exam02/new}">Member 데이터 삽입</a>
+    <br><br>
+    <table>
+        <tr>
+            <th>아이디</th>
+            <th>이름</th>
+            <th>나이</th>
+            <th>이메일</th>
+            <th>비고</th>
+        </tr>
+        <tr th:each="member : ${memberList}">
+            <td th:text="${member.id}"></td>
+            <td th:text="${member.name}"></td>
+            <td th:text="${member.age}"></td>
+            <td th:text="${member.email}"></td>
+            <td>
+                <a th:href="@{'/exam01/edit/'+${member.id}}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a th:href="@{'/exam02/delete/'+${member.id}}">Delete</a>
+            </td>
+        </tr>
+
+    </table>
+</div>
+</body>
+</html>

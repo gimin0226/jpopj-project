@@ -1,0 +1,26 @@
+spring:
+  web:
+    resources:
+      cache:
+        period: 0
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/springbootDB
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    generate-ddl: true
+  h2:
+    console:
+      enabled: true
+  profiles:
+    include: oauth
