@@ -79,6 +79,7 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 ## 추가로 개발할 기능
 ###### 개발 완료한 기능은 취소선 표시
 <details>
+<summary>추가로 개발할 기능</summary>
  - ~~post, user,comment 애그리거트 만들기~~
  - ~~각 애그리거트 도메인에 해당하는 controller, service, repository 작성하기~~
  - ~~게시물 작성 기능~~
@@ -108,8 +109,9 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
  - 홈화면에 오늘 하루 가장 많이 조회 or 언급된 가수 top5 나열하기
 </details>
 
-## 추가할 적용할 기술
+## 추가로 적용할 기술
 <details>
+<summary>추가로 적용할 기술</summary>
 - JUnit을 활용한 단위 테스트 작성
 - AWS EC2를 활용한 배포 환경 구성
 - 게시글 이미지 S3 저장 기능 도입
