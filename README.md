@@ -51,22 +51,25 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 <summary>게시판 목록</summary>
 
 ![1.png](src/main/resources/static/images/1.png)
-</deatils>
+</details>
+
 <details>
 <summary>게시글 작성</summary> 
 
 ![2.png](src/main/resources/static/images/1.png)
-</deatils>
+</details>
+
 <details>
 <summary>사용자 정보</summary>
 
 ![3.png](src/main/resources/static/images/3.png)
-</deatils>
+</details>
+
 <details>
 <summary>게시글 및 댓글</summary>
 
 ![4.png](src/main/resources/static/images/4.png)
-</deatils>
+</details>
 
 ## 시스템 설계
 
@@ -104,6 +107,7 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
  - 가수 정보 애그리거트로 만들기
  - 홈화면에 오늘 하루 가장 많이 조회 or 언급된 가수 top5 나열하기
 </details>
+
 ## 추가할 적용할 기술
 <details>
 - JUnit을 활용한 단위 테스트 작성
