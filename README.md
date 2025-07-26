@@ -1,4 +1,4 @@
-# 🎵 JPOP 블로그 프로젝트
+# JPOP 블로그 프로젝트
 
 > 일본 음악 팬들을 위한 커뮤니티 블로그 서비스  
 > Spring Boot 기반 백엔드 + Thymeleaf 프론트엔드 구현
@@ -47,21 +47,26 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 ###### 취소선으로 표시된 기술 스택은 현재 적용되지는 않았지만, 추후 도입을 계획하고 있는 기술입니다.
 
 ## 실행 화면
-게시판 목록
+<details>
+<summary>게시판 목록</summary>
 
-[1.png](src/main/resources/static/images/1.png)
+![1.png](src/main/resources/static/images/1.png)
+</deatils>
+<details>
+<summary>게시글 작성</summary> 
 
-게시글 작성 
+![2.png](src/main/resources/static/images/1.png)
+</deatils>
+<details>
+<summary>사용자 정보</summary>
 
-[2.png](src/main/resources/static/images/1.png)
+![3.png](src/main/resources/static/images/3.png)
+</deatils>
+<details>
+<summary>게시글 및 댓글</summary>
 
-사용자 정보
-
-[3.png](src/main/resources/static/images/3.png)
-
-게시글 및 댓글
-
-[4.png](src/main/resources/static/images/4.png)
+![4.png](src/main/resources/static/images/4.png)
+</deatils>
 
 ## 시스템 설계
 
@@ -70,6 +75,7 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 ### 2. API 설계
 ## 추가로 개발할 기능
 ###### 개발 완료한 기능은 취소선 표시
+<details>
  - ~~post, user,comment 애그리거트 만들기~~
  - ~~각 애그리거트 도메인에 해당하는 controller, service, repository 작성하기~~
  - ~~게시물 작성 기능~~
@@ -97,8 +103,9 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
  - Report 애그리거트 만들기
  - 가수 정보 애그리거트로 만들기
  - 홈화면에 오늘 하루 가장 많이 조회 or 언급된 가수 top5 나열하기
-
+</details>
 ## 추가할 적용할 기술
+<details>
 - JUnit을 활용한 단위 테스트 작성
 - AWS EC2를 활용한 배포 환경 구성
 - 게시글 이미지 S3 저장 기능 도입
@@ -106,3 +113,4 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 - Github actions를 통한 CI/CD 자동화
 - Redis로 좋아요/댓글 수, 인기게시물 캐싱
 - Elasticsearch를 통한 검색 기능 개선
+</details>
