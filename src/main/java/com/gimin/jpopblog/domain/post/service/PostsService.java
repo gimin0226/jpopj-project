@@ -8,6 +8,8 @@ import com.gimin.jpopblog.domain.post.dto.PostResponseDto;
 import com.gimin.jpopblog.domain.post.dto.PostCreateRequestDto;
 import com.gimin.jpopblog.domain.post.dto.PostSummaryDto;
 import com.gimin.jpopblog.domain.post.dto.PostUpdateRequestDto;
+import com.gimin.jpopblog.domain.user.entity.User;
+import com.gimin.jpopblog.domain.user.repository.UserRepository;
 import com.gimin.jpopblog.global.config.auth.dto.SessionUser;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -21,13 +23,23 @@ import java.util.List;
 public class PostsService {
 
     private final PostsRepository postsRepository;
+    private final UserRepository userRepository;
+
     @Transactional
     public Long save(PostCreateRequestDto requestDto, SessionUser sessionUser){
-        requestDto.setUserName(sessionUser.getName());
-        if(requestDto.getUserName()==null){
+        // 1. 사용자 정보가 유효한지 먼저 확인
+        if(sessionUser==null){
             throw new IllegalArgumentException("작성자가 누락되었습니다.");
         }
-        return postsRepository.save(requestDto.toEntity()).getId();
+
+        // 2. SELECT 쿼리 없이 User 프록시 객체 로드
+        User userProxy = userRepository.getReferenceById(sessionUser.getId());
+
+        // 3. DTO와 프록시 객체를 사용하여 서비스 계층에서 직접 엔티티 생성
+        Post post = requestDto.toEntity(userProxy);
+
+        // 4. 저장 후 ID 반환
+        return postsRepository.save(post).getPostId();
     }
 
     @Transactional
@@ -39,9 +51,9 @@ public class PostsService {
         return id;
     }
 
-    public PostResponseDto findById(Long id){
-        Post article = postsRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시물이 없습니다 id:"+id));
-        return PostResponseDto.from(article);
+    public PostResponseDto findById(Long postId){
+        Post post = postsRepository.findById(postId).orElseThrow(()->new IllegalArgumentException("해당 게시물이 없습니다 id:"+postId));
+        return PostResponseDto.from(post);
     }
 
     public List<PostSummaryDto> findByCategory(TagType category){

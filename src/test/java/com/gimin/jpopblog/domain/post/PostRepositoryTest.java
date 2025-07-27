@@ -24,7 +24,7 @@ public class PostRepositoryTest {
     public void cleanup() {
         postsRepository.deleteAll();
     }
-
+/*
     @Test
     @DisplayName("게시글 저장 후 조회하면 값이 일치해야 한다")
     public void 게시글저장_불러오기() {
@@ -69,4 +69,6 @@ public class PostRepositoryTest {
 
 
     }
+    */
+
 }

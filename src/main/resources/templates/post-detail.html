@@ -33,7 +33,7 @@
     <h1 class="post-title" th:text="${post.title}">제목</h1>
 
     <div class="post-meta">
-        <span class="post-author" th:text="${post.author}">작성자</span> |
+        <span class="post-author" th:text="${post.userName}">작성자</span> |
         <span class="post-date" th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
     </div>
 
@@ -66,8 +66,8 @@
 
         <!-- 댓글 작성 폼 -->
         <div class="comment-form" th:if="${session.user != null}">
-            <form th:action="@{'/posts/'+${post.id}+ '/comments'}" method="post">
-                <input type="hidden" name="postId" th:value="${post.id}"/>
+            <form th:action="@{'/posts/'+${post.postId}+ '/comments'}" method="post">
+                <input type="hidden" name="postId" th:value="${post.postId}"/>
                 <input type="hidden" name="userId" th:value="${session.user.id}"/>
                 <textarea name="content" placeholder="댓글을 입력하세요..." required></textarea>
                 <button type="submit">댓글 작성하기</button>

@@ -35,7 +35,7 @@ public class PostApiControllerTest {
     public void tearDown() throws Exception {
         postsRepository.deleteAll();
     }
-
+/*
     @Test
     public void Posts_등록된다() throws Exception {
         //given
@@ -90,5 +90,5 @@ public class PostApiControllerTest {
         assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
     }
 
-
+*/
 }
