@@ -91,7 +91,7 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 
  - ~~oauth2를 이용한 로그인 기능~~
 
- - [post 애그리거트 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)
+ - ~~[post 애그리거트 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)~~
 
  - 게시물 삭제 기능
 
