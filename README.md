@@ -93,6 +93,10 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 
  - ~~[post 애그리거트 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)~~
 
+ - ~~[User 애그리거트 루트에 Nickname VO 추가하기](https://www.notion.so/User-Nickname-VO-23da987f6c4080b7a00ef6b9adc971ff)~~
+
+ - ~~[소셜 로그인 후 추가 정보 입력받기](https://www.notion.so/23fa987f6c40808b98fef34bdffb62ae)~~
+
  - 게시물 삭제 기능
 
  - 게시물 수정 기능
