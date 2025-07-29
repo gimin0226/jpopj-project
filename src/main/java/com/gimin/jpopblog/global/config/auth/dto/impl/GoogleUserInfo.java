@@ -17,6 +17,7 @@ public class GoogleUserInfo implements OAuthUserInfo {
         return getRequired("name");
     }
 
+
     @Override
     public String getEmail() {
         return getRequired("email");

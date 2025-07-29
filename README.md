@@ -76,7 +76,7 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 ### 1. DB 설계
 
 ### 2. API 설계
-## 추가로 개발할 기능
+## [추가로 개발할 기능](https://long-feather-730.notion.site/23da987f6c4080fcb932ed9eb2f8390e)
 ###### 개발 완료한 기능은 취소선 표시
 <details>
 <summary>추가로 개발할 기능</summary>

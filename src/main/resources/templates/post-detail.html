@@ -33,7 +33,7 @@
     <h1 class="post-title" th:text="${post.title}">제목</h1>
 
     <div class="post-meta">
-        <span class="post-author" th:text="${post.userName}">작성자</span> |
+        <span class="post-author" th:text="${post.userNickname}">작성자</span> |
         <span class="post-date" th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
     </div>
 
@@ -55,7 +55,7 @@
 
             <div th:each="comment : ${comments}" class="comment-item">
                 <div class="comment-meta">
-                    <strong th:text="${comment.userName}">작성자</strong>
+                    <strong th:text="${comment.userNickname}">작성자</strong>
                     <span th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
                 </div>
                 <div class="comment-content" th:text="${comment.content}">댓글 내용</div>

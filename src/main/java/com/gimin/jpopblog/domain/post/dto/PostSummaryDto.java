@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostSummaryDto {
     private String title;
-    private String userName;
+    private String userNickname;
     private LocalDateTime date;
     private Long postId;
 
     public static PostSummaryDto from(Post post){
         PostSummaryDto dto = new PostSummaryDto();
         dto.title= post.getTitle();
-        dto.userName = post.getUser().getName();
+        dto.userNickname = post.getUser().getNickname().getValue();
         dto.date = post.getCreatedDate();
         dto.postId = post.getPostId();
         return dto;

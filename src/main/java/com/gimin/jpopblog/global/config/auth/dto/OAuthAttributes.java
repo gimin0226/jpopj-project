@@ -1,5 +1,6 @@
 package com.gimin.jpopblog.global.config.auth.dto;
 
+import com.gimin.jpopblog.domain.user.entity.Nickname;
 import com.gimin.jpopblog.global.config.auth.dto.impl.GoogleUserInfo;
 import com.gimin.jpopblog.global.config.auth.dto.impl.KakaoUserInfo;
 import com.gimin.jpopblog.global.config.auth.dto.impl.NaverUserInfo;
@@ -8,6 +9,7 @@ import com.gimin.jpopblog.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @Getter
@@ -18,17 +20,19 @@ public class OAuthAttributes {
     private final String name;
     private final String email;
     private final String picture;
+    private final String registrationId;  //provider 정보
 
     @Builder
-    public OAuthAttributes(OAuthUserInfo userInfo, String nameAttributeKey){
+    public OAuthAttributes(OAuthUserInfo userInfo, String nameAttributeKey, String registrationId){
         this.attributes= userInfo.getAttributes();
         this.nameAttributeKey = nameAttributeKey;
         this.name= userInfo.getName();
         this.email = userInfo.getEmail();
         this.picture = userInfo.getPicture();
+        this.registrationId = registrationId;
     }
 
-    public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes){
+    public static OAuthAttributes of(String registrationId, String userNameAttributeKey, Map<String, Object> attributes){
 
         OAuthProvider provider = OAuthProvider.from(registrationId);
 
@@ -38,17 +42,20 @@ public class OAuthAttributes {
             case KAKAO -> new KakaoUserInfo(attributes);
         };
 
-        return new OAuthAttributes(userInfo, userNameAttributeName);
+        return new OAuthAttributes(userInfo, userNameAttributeKey, registrationId);
     }
 
 
 
-    public User toEntity(){
+    public User toEntity(Nickname nickname, LocalDate birthDate){
         return User.builder()
-                .email(email)
-                .name(name)
-                .picture(picture)
-                .role(Role.GUEST)  //최초 가입자는 GUEST
+                .email(this.email)
+                .name(this.name)
+                .picture(this.picture)
+                .role(Role.USER)
+                .nickname(nickname)
+                .birthDate(birthDate)
+                .provider(this.registrationId)
                 .build();
     }
 
