@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>추가 정보 입력</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; color: #333; }
+        .signup-container { width: 100%; max-width: 420px; padding: 40px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); text-align: center; }
+        .signup-container h1 { font-size: 26px; font-weight: 700; margin-bottom: 10px; color: #1c1e21; }
+        .signup-container p { font-size: 16px; color: #606770; margin-bottom: 30px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #4b4f56; }
+        .input-group input { width: 100%; padding: 12px 15px; font-size: 16px; border: 1px solid #dddfe2; border-radius: 8px; transition: border-color 0.2s, box-shadow 0.2s; }
+        .input-group input:focus { outline: none; border-color: #1877f2; box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2); }
+        .validation-message { font-size: 12px; margin-top: 6px;  }
+        .validation-message.success { color: #28a745; }
+        .validation-message.error { color: #dc3545; }
+        .submit-btn { width: 100%; padding: 14px; font-size: 18px; font-weight: 700; color: #ffffff; background-color: #1877f2; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; }
+        .submit-btn:hover { background-color: #166fe5; }
+        .submit-btn:disabled { background-color: #a0bdf0; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="signup-container">
+    <h1>마지막 단계입니다!</h1>
+    <p>서비스 이용을 위해 추가 정보를 입력해주세요.</p>
+
+    <form id="additional-info-form" th:action="@{/signup/complete}" th:object="${requestDto}" method="post">
+        <div class="input-group">
+            <label for="nickname">닉네임</label>
+            <input id="nickname" type="text" th:field="*{nickname}" placeholder="사용하실 닉네임을 입력하세요" required>
+            <p class="validation-message" id="nicknameMessage"></p>
+        </div>
+
+        <div class="input-group">
+            <label for="birthDate">생년월일</label>
+            <input id="birthDate" type="date" th:field="*{birthDate}" required>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn" disabled>가입 완료</button>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", () => {
+        const nicknameInput = document.getElementById("nickname");
+        const birthDateInput = document.getElementById("birthDate");
+        const nicknameMessage = document.getElementById("nicknameMessage");
+        const submitBtn = document.getElementById("submit-btn");
+
+        let isNicknameValid = false;
+        let isBirthDateFilled = false;
+
+        function updateSubmitButtonState() {
+            submitBtn.disabled = !(isNicknameValid && isBirthDateFilled);
+        }
+
+        nicknameInput.addEventListener("input", () => {
+            const nickname = nicknameInput.value;
+
+            if (!nickname) {
+                nicknameMessage.textContent = "";
+                isNicknameValid = false;
+                updateSubmitButtonState();
+                return;
+            }
+
+            fetch(`/users/check-nickname?nickname=${encodeURIComponent(nickname)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.isDuplicate) {
+                        nicknameMessage.textContent = "이미 사용 중인 닉네임입니다.";
+                        nicknameMessage.style.color = "red";
+                        isNicknameValid = false;
+                    } else {
+                        nicknameMessage.textContent = "사용 가능한 닉네임입니다.";
+                        nicknameMessage.style.color = "green";
+                        isNicknameValid = true;
+                    }
+                    updateSubmitButtonState();
+                });
+        });
+
+        birthDateInput.addEventListener("input", () => {
+            isBirthDateFilled = !!birthDateInput.value;
+            updateSubmitButtonState();
+        });
+    });
+</script>
+</body>
+</html>

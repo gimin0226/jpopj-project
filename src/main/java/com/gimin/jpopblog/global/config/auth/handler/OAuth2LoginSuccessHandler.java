@@ -1,5 +1,6 @@
 package com.gimin.jpopblog.global.config.auth.handler;
 
+import com.gimin.jpopblog.domain.user.entity.Role;
 import com.gimin.jpopblog.global.config.auth.dto.SessionUser;
 import com.gimin.jpopblog.domain.user.entity.User;
 import com.gimin.jpopblog.domain.user.repository.UserRepository;
@@ -29,20 +30,19 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         // 기본 oAuth2User 객체
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        Map<String,Object> attributes = oAuth2User.getAttributes();
 
-        //기본적으로 OAuthAttributes에 의해 email은 항상 포함되도록 설계돼 있음
-        String email = (String)attributes.get("email");
+        // 한 명의 사용자가 가진 권한 목록을 순회
+        // 하나라도 만족하면 true 반환하고 스트림 멈춤
+        boolean isGuest = oAuth2User.getAuthorities().stream()
+                .anyMatch(a-> a.getAuthority().equals(Role.GUEST.getKey()));
 
-        // DB 조회 or 저장
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new IllegalStateException("소셜 로그인 사용자 정보가 없습니다."));
-
-        // 세션 저장
-        httpSession.setAttribute("user", new SessionUser(user));
-
-        // 리다이렉트
-        response.sendRedirect("/");
+        if(isGuest){
+            // 권한이 GUEST이면 추가 정보 입력 페이지로 리다이렉트
+            response.sendRedirect("/signup-more-info");
+        }else {
+            // 권한이 USER이면 메인 페이지로 리다이렉트
+            response.sendRedirect("/");
+        }
 
     }
 

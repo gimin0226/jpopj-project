@@ -14,23 +14,24 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentResponseDto {
     private Long postId;
-    private String userName;
+    private String userNickname;
     private Long commentId;
     private String content;
     private LocalDateTime createdDate;
 
     @Builder
-    public CommentResponseDto(Long commentId, Long postId, String author, String content, LocalDateTime createdDate) {
+    public CommentResponseDto(Long commentId, Long postId, String userNickname, String content, LocalDateTime createdDate) {
         this.commentId = commentId;
         this.postId = postId;
         this.content = content;
         this.createdDate = createdDate;
+        this.userNickname = userNickname;
     }
 
-    public static CommentResponseDto of(Comment comment, String userName){
+    public static CommentResponseDto of(Comment comment, String userNickname){
         CommentResponseDto dto = new CommentResponseDto();
         dto.postId = comment.getPostId();
-        dto.userName = userName;
+        dto.userNickname = userNickname;
         dto.commentId = comment.getCommentId();
         dto.content = comment.getContent();
         dto.createdDate = comment.getCreatedDate();

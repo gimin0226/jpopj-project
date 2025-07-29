@@ -54,7 +54,7 @@ public class CommentService {
                     if (user == null) {
                         throw new IllegalStateException("댓글 작성자의 유저 정보를 찾을 수 없습니다: userId = " + comment.getUserId());
                     }
-                    return CommentResponseDto.of(comment,user.getName());
+                    return CommentResponseDto.of(comment,user.getNickname().getValue());
                 })
                 .toList();
     }

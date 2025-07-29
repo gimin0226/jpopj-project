@@ -31,7 +31,7 @@ public class BlogController {
         System.out.println(category);
         TagType activeCategory = TagType.from(category);
 
-        List<PostSummaryDto> posts = postsService.findByCategory(TagType.from(category));
+        List<PostSummaryDto> posts = postsService.findByCategory(activeCategory);
 
         model.addAttribute("posts", posts);
         model.addAttribute("activeCategory",category);
