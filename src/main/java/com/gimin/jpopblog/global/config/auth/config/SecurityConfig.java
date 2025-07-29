@@ -28,7 +28,10 @@ public class SecurityConfig{
                         .requestMatchers("/api/v1/**").hasRole(Role.USER.name()) //.name()은 "USER" 리턴 -> hasRole에는 "ROLE_"없이 넣지만 내부적으로 "ROLE_"이 붙어서 비교됨
                         .anyRequest().authenticated()
                 )
-                .logout(logout->logout.logoutSuccessUrl("/"))
+                .logout(logout->logout
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo->userInfo
                                 .userService(customOAuth2UserService))    //1. 유저 정보 가져올 때 쓸 서비스 등록

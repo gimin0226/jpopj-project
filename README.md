@@ -97,6 +97,8 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 
  - ~~[소셜 로그인 후 추가 정보 입력받기](https://www.notion.so/23fa987f6c40808b98fef34bdffb62ae)~~
 
+ - ~~[★★★Spring Security 로그아웃 동작원리 분석★★★](https://long-feather-730.notion.site/23fa987f6c40804cbd7eed2aaa24fe5f?pvs=74)~~
+
  - 게시물 삭제 기능
 
  - 게시물 수정 기능
