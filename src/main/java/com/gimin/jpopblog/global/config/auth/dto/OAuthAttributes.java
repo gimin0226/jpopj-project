@@ -47,17 +47,8 @@ public class OAuthAttributes {
 
 
 
-    public User toEntity(Nickname nickname, LocalDate birthDate){
-        return User.builder()
-                .email(this.email)
-                .name(this.name)
-                .picture(this.picture)
-                .role(Role.USER)
-                .nickname(nickname)
-                .birthDate(birthDate)
-                .provider(this.registrationId)
-                .build();
-    }
+
+
 
 
  }
