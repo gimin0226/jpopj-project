@@ -21,6 +21,7 @@ public class User extends BaseTimeEntity {
     private String name;
 
     @Embedded
+    @Column(nullable = false)
     private Nickname nickname;
 
     @Column(nullable = false, unique = true)

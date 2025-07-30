@@ -4,6 +4,7 @@ package com.gimin.jpopblog.domain.user.controller;
 import com.gimin.jpopblog.domain.user.dto.AdditionalInfoRequestDto;
 import com.gimin.jpopblog.domain.user.entity.User;
 import com.gimin.jpopblog.domain.user.service.UserService;
+import com.gimin.jpopblog.global.config.auth.LoginUser;
 import com.gimin.jpopblog.global.config.auth.dto.OAuthAttributes;
 import com.gimin.jpopblog.global.config.auth.dto.SessionUser;
 import jakarta.servlet.http.HttpSession;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -28,83 +31,66 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final HttpSession httpSession;
+
     @GetMapping("/users/check-nickname")
     @ResponseBody
-    public Map<String, Boolean> checkNicknameDuplicate(@RequestParam String nickname){
-        Map<String,Boolean> response = new HashMap<>();
+    public Map<String, Boolean> checkNicknameDuplicate(@RequestParam String nickname) {
+        Map<String, Boolean> response = new HashMap<>();
         System.out.println(nickname);
         response.put("isDuplicate", userService.isNicknameDuplicate(nickname));
         return response;
     }
 
     @GetMapping("/signup-more-info")
-    public String signupMoreInfo(Model model){
+    public String signupMoreInfo(Model model) {
         model.addAttribute("requestDto", new AdditionalInfoRequestDto());
         return "signup-more-info";
     }
 
     @PostMapping("/signup/complete")
-    public String completeSignUp(Model model, @ModelAttribute AdditionalInfoRequestDto requestDto){
+    public String completeSignUp(@LoginUser("social_info") SessionUser sessionUser, @ModelAttribute AdditionalInfoRequestDto requestDto) {
         // 1. 세션에서 소셜 로그인 정보 가져오기
-
-        OAuthAttributes socialAttributes = (OAuthAttributes) httpSession.getAttribute("social_info");
-        if(socialAttributes==null){
+        if (sessionUser == null) {
             throw new IllegalArgumentException("세션 정보가 없습니다.");
         }
 
+        System.out.println(sessionUser);
+
         // 2. 서비스에 정보들을 넘겨 최종 회원가입 처리
-        User newUser = userService.completeSignUp(socialAttributes, requestDto);
+        User newUser = userService.completeSignUp(sessionUser, requestDto);
 
         // 3. 기존 세션 정보 삭제 및 새 정보로 업데이트
         httpSession.removeAttribute("social_info");
-        httpSession.setAttribute("user",new SessionUser(newUser));
+        httpSession.setAttribute("user", new SessionUser(newUser));
 
         // 4. Spring Security의 현재 인증 정보 업데이트
-        updateAuthentication(socialAttributes,newUser);
-        System.out.println(requestDto);
+        updateAuthentication(newUser);
         return "redirect:/";
     }
 
 
-    public void updateAuthentication(OAuthAttributes socialAttributes, User user) {
+    // 더 이상 OAuthAttributes가 필요 없으므로 파라미터를 User만 받도록 변경합니다.
+    public void updateAuthentication(User user) {
+        // 1. 현재 SecurityContext에서 인증 정보(Authentication) 가져오기
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
 
-        /*
-         * 이 메서드는 추가 정보 기입 등으로 사용자의 정보(특히 권한)가 변경되었을 때,
-         * 현재 세션에 반영된 Spring Security의 인증 정보를 수동으로 갱신하는 역할을 한다.
-         * 이를 통해 사용자는 로그아웃 후 다시 로그인할 필요 없이 즉시 새로운 권한을 적용받게 된다.
-         */
+        // 2. 새로운 권한 생성
+        // 사용자의 최종 권한(e.g., ROLE_USER)으로 새로운 Authority 리스트를 만듭니다.
+        List<GrantedAuthority> newAuthorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRoleKey()));
 
-        // 사용자의 최종 정보(provider, role 등)와 기존 소셜 로그인 속성을 바탕으로
-        // 새로운 OAuthAttributes 객체를 생성한다.
-        OAuthAttributes attributes = OAuthAttributes.of(user.getProvider(),
-                socialAttributes.getNameAttributeKey(),
-                socialAttributes.getAttributes());
-
-        // 새로운 인증 정보를 담을 Principal 객체(DefaultOAuth2User)를 생성한다.
-        DefaultOAuth2User newOAuth2User = new DefaultOAuth2User(
-                // 1. 가장 중요한 부분: DB에 저장된 사용자의 최종 권한(Role)을 가져와 설정한다.
-                //    (예: ROLE_GUEST -> ROLE_USER)
-                Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
-                // 2. 소셜 로그인 시 받아온 사용자의 속성 맵을 그대로 사용한다.
-                attributes.getAttributes(),
-                // 3. 사용자 이름의 기준이 되는 속성의 키 값을 설정한다.
-                attributes.getNameAttributeKey()
+        // 3. 새 인증 정보 생성
+        // 기존 Principal 객체와 새로운 권한으로 새 Authentication 객체를 생성합니다.
+        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+                currentAuth.getPrincipal(), // 기존 Principal 사용
+                currentAuth.getCredentials(), // 기존 Credentials 사용
+                newAuthorities // 새로 만든 권한 사용
         );
 
-        // 새로운 인증(Authentication) 객체, 즉 '인증 티켓'을 생성한다.
-        // UsernamePasswordAuthenticationToken은 비밀번호 방식 외에도 범용적으로 사용된다.
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                newOAuth2User, // Principal (인증된 사용자 주체)
-                null,          // Credentials (자격 증명, 보통 null로 처리)
-                newOAuth2User.getAuthorities() // Authorities (갱신된 사용자 권한)
-        );
-
-        // SecurityContextHolder에 있는 현재 SecurityContext에 새로운 인증 정보를 설정한다.
-        // 이 코드를 통해 현재 세션의 인증 정보가 실시간으로 갱신된다.
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // 4. SecurityContext에 새 인증 정보 설정
+        SecurityContextHolder.getContext().setAuthentication(newAuthentication);
     }
-
 }
+
 
 //updateAuthentication 메서드 상세 설명
 /*

@@ -5,6 +5,7 @@ import com.gimin.jpopblog.domain.user.entity.Nickname;
 import com.gimin.jpopblog.domain.user.entity.User;
 import com.gimin.jpopblog.domain.user.repository.UserRepository;
 import com.gimin.jpopblog.global.config.auth.dto.OAuthAttributes;
+import com.gimin.jpopblog.global.config.auth.dto.SessionUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,9 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User completeSignUp(OAuthAttributes socialAttributes, AdditionalInfoRequestDto requestDto){
+    public User completeSignUp(SessionUser sessionUser, AdditionalInfoRequestDto requestDto){
         //소셜 정보와 추가 정보를 합쳐서 User 엔티티 생성 후 db 저장(그 전에는 세션만 저장하고 db에 저장 안함)
-        User user = socialAttributes.toEntity(new Nickname(requestDto.getNickname()), requestDto.getBirthDate());
+        User user = sessionUser.toEntity(new Nickname(requestDto.getNickname()), requestDto.getBirthDate());
         return userRepository.save(user);
     }
 

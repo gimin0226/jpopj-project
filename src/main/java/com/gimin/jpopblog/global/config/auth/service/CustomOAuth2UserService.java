@@ -73,7 +73,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     public OAuth2User processNewUser(OAuthAttributes attributes){
         //2. 신규 사용자인 경우 (가회원 등록)
         // 세션에 소셜 로그인 정보 임시 등록
-        httpSession.setAttribute("social_info",attributes);
+        httpSession.setAttribute("social_info",new SessionUser(attributes));
 
         //가회원 권한 부여
         //singleton으로 권한이 하나뿐인 사용자 만듬(요소 하나만 들어있는 불변 Set)
