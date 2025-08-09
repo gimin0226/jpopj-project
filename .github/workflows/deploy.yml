@@ -46,7 +46,22 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      # 5. 빌드된 JAR 파일을 EC2로 전송
+      # 5. plain 제외하고 최신 부트 JAR을 app.jar로 고정
+      - name: Find and Rename Boot JAR
+        run: |
+          # build/libs 디렉토리에서 '-plain.jar'이 아닌 가장 최신 JAR 파일을 찾는다.
+          BOOT_JAR=$(ls -t build/libs/*.jar | grep -v 'plain' | head -n1)
+          #BOOT_JAR 파일이 비어있으면 에러 발생시킴
+          if [ -z "$BOOT_JAR" ]; then
+            echo "No boot jar found (non-plain) under build/libs"
+            ls -al build/libs || true
+            exit 1
+          fi
+          echo "Found JAR: $BOOT_JAR"
+          mv "$BOOT_JAR" app.jar
+          ls -al app.jar
+
+      # 6. 빌드된 JAR 파일을 EC2로 전송
       # 'appleboy/scp-action' 액션을 사용하여 빌드된 .jar 파일을 EC2 인스턴스로 안전하게 복사(전송)합니다.
       - name: Transfer JAR to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -56,11 +71,11 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }} # EC2 접속 유저 이름 (예: ubuntu, ec2-user)
           key: ${{ secrets.EC2_SSH_KEY }}       # EC2 접속을 위한 프라이빗 키 (.pem 파일의 내용)
           # 전송할 파일의 위치를 지정합니다. 여기서는 빌드 결과물인 모든 .jar 파일을 의미합니다.
-          source: "build/libs/*.jar"
+          source: "app.jar"
           # EC2 인스턴스 내에 파일이 저장될 목적지 경로입니다.
-          target: "/home/ubuntu/app"
+          target: "/home/${{ secrets.EC2_USERNAME }}/app"
 
-      # 6. EC2에 접속하여 배포 스크립트 실행
+      # 7. EC2에 접속하여 배포 스크립트 실행
       # 'appleboy/ssh-action' 액션을 사용하여 EC2 인스턴스에 원격으로 접속하고, 배포 스크립트를 실행합니다.
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -70,12 +85,25 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           # EC2 인스턴스에서 실행될 셸 스크립트 내용입니다.
           script: |
-            # 'pgrep'으로 'java' 프로세스의 PID(프로세스 ID)를 찾아서 'kill -9' 명령으로 강제 종료합니다.
-            # '|| true'는 실행 중인 java 프로세스가 없어 pgrep이 실패하더라도, 스크립트 전체가 중단되지 않도록 합니다.
-            pgrep java | xargs kill -9 || true
+            # 스크립트 실행 중 오류 발생 시 즉시 중단
+            set -e
+
+            APP_DIR="/home/${{ secrets.EC2_USERNAME }}/app"
+            JAR_NAME="app.jar"
+            LOG_FILE="$APP_DIR/app.log"
             
-            # 새로 전송된 .jar 파일을 백그라운드에서 실행합니다.
-            # 'nohup'을 사용하여 SSH 세션이 끊겨도 애플리케이션이 계속 실행되도록 합니다.
-            # '--spring.profiles.active=prod'는 Spring Boot 애플리케이션의 실행 프로파일을 'prod'(운영 환경)로 설정합니다.
-            # '> nohup.out 2>&1 &'는 애플리케이션의 모든 표준 출력(stdout)과 표준 에러(stderr)를 'nohup.out' 파일로 리디렉션하여 로그를 기록하고, 프로세스를 백그라운드에서 실행시킵니다.
-            nohup java -jar /home/ubuntu/app/*.jar --spring.profiles.active=prod > /home/ubuntu/app/nohup.out 2>&1 &
+            # 실행 중인 애플리케이션 프로세스 종료
+            echo "Stopping any running application..."
+            # pkill로 프로세스를 찾지 못해도 오류가 발생하지 않도록 처리
+            if pgrep -f $JAR_NAME; then
+              pkill -f $JAR_NAME
+              # 프로세스가 완전히 종료될 시간을 준다.
+              sleep 5
+            fi
+            
+            # 애플리케이션 디렉토리로 이동
+            cd $APP_DIR
+            
+            # 새로운 JAR 파일로 애플리케이션 실행
+            echo "Starting application..."
+            nohup java -jar $JAR_NAME --spring.profiles.active=prod > $LOG_FILE 2>&1 &
