@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PostsRepository extends JpaRepository<Post, Long> {
-    List<Post> findByCategory(TagType category);
+    //카테고리에 해당하는 게시글 목록이 최신순으로 정렬되도록 
+    List<Post> findByCategoryOrderByCreatedDateDesc(TagType category);
 }

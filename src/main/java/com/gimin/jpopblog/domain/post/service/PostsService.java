@@ -57,7 +57,7 @@ public class PostsService {
     }
 
     public List<PostSummaryDto> findByCategory(TagType category){
-        return postsRepository.findByCategory(category).stream()
+        return postsRepository.findByCategoryOrderByCreatedDateDesc(category).stream()
                 .map(PostSummaryDto::from)
                 .toList();
     }

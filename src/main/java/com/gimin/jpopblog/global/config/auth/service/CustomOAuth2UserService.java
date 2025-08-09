@@ -32,22 +32,28 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!");
         // 위임(Delegation)을 통해 기본적인 사용자 정보 로드
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
+        System.out.println(oAuth2User);
         // 현재 로그인 진행 중인 서비스를 구분 (e.g., "google", "naver", ...)
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         // OAuth2 로그인 진행 시 키가 되는 필드 값 (PK)
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        String userNameAttributeName = "naver".equals(registrationId)
+                ? "id"
+                : userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
+        System.out.println("userNameAttributeName"+userNameAttributeName);
         // 소셜 로그인 플랫폼별 속성을 DTO(OAuthAttributes)로 변환
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        System.out.println(attributes);
 
         //이메일로 기존 사용자인지 신규 사용자인지 확인
         Optional<User> userOptional = userRepository.findByEmail(attributes.getEmail());
 
+        System.out.println(userOptional);
         if(userOptional.isPresent()){
            return processExistingUser(userOptional.get(), attributes);
         }else{
@@ -74,6 +80,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         //2. 신규 사용자인 경우 (가회원 등록)
         // 세션에 소셜 로그인 정보 임시 등록
         httpSession.setAttribute("social_info",new SessionUser(attributes));
+        System.out.println("(((((((((((((((((((((((((");
 
         //가회원 권한 부여
         //singleton으로 권한이 하나뿐인 사용자 만듬(요소 하나만 들어있는 불변 Set)

@@ -8,11 +8,13 @@ import com.gimin.jpopblog.domain.user.entity.Role;
 import com.gimin.jpopblog.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Map;
 
 @Getter
+@ToString
 public class OAuthAttributes {
     //Object는 어떤 타입이든 저장 가능
     private final Map<String, Object> attributes;
@@ -38,7 +40,7 @@ public class OAuthAttributes {
 
         OAuthUserInfo userInfo = switch(provider){
             case GOOGLE -> new GoogleUserInfo(attributes);
-            case NAVER -> new NaverUserInfo(attributes);
+            case NAVER -> new  NaverUserInfo(attributes);
             case KAKAO -> new KakaoUserInfo(attributes);
         };
 

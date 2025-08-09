@@ -1,26 +1,48 @@
+server:
+  forward-headers-strategy: native
+  # 프록시/로드밸런서 환경에서 X-Forwarded-For, X-Forwarded-Proto 등의 헤더를 Spring이 인식하도록 함
+  # X-Forwarded-For는 원래 HTTP 표준 헤더가 아닌 프록시나 로드밸런서가 추가로 붙여주는 헤더
+  # X-Forwarded-For: 요청이 프록시나 로드밸런서를 거쳤을 때, 원래 클라이언트의 IP 주소를 담음
+  # X-Forwarded-Proto: 클라이언트가 서버에 접속할 때 사용한 원래 프로토콜
+  # --> 서버 입장에서는 로드밸런스와 HTTP로 통신했더라도, 실제 클라이언트는 HTTPS로 접속했다는 걸 알 수 있음
+
 spring:
   web:
     resources:
       cache:
         period: 0
+        # 정적 리소스(이미지, js, css) 캐시 기간을 0으로 설정 -> 개발 중 변경 사항 즉시 반영
+        # 캐시 ON이면 브라우저가 JS/CSS/이미지 한 번 받아오면, 같은 파일은 다시 요청 안 하고 브라우저 로컬에 저장된 버전을 씀
+        #파일 수정해도 브라우저는 옛날 버전을 계속 씀
+
   thymeleaf:
     cache: false
-  datasource:
-    url: jdbc:mysql://localhost:3306/springbootDB
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1234
+    # Thymeleaf 템플릿 캐시 비활성화 -> HTML 수정 시 서버 재시작 없이 즉시 반영
+    # 캐시 on이면 html 파일이 한 번 로딩되면 서버는 디스크에서 파일을 다시 읽지 않고, 메모리에 저장된 컴파일 결과를 재사용
+
   jpa:
+    hibernate:
+      ddl-auto: none     # 스키마 자동 생성/ 수정 여부 -> 'none'이면 DB 스키마를 건들지 않음
     properties:
       hibernate:
-        ddl-auto: update
-        format_sql: true
+        format_sql: true   # SQL을 예쁘게 포맷해서 출력
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
-    generate-ddl: true
-  h2:
-    console:
-      enabled: true
+    # MySQL 전용 Hibernate 방언
+    # Hibernate가 JPA-> SQL 변환을 할 때 DBMS 별 문법 차이를 맞춰주는 번역기 역할을 함
+    # 데이터베이스마다 SQL 문법, 함수, 키워드가 조금씩 다르기 때문에
+    show-sql: true      # 콘솔에 SQL 출력
+    generate-ddl: true  #DDL 생성 여부
+
+  jackson: # JSON 변환 (Jackson 라이브러리) 관련 설정
+    date-format: yyyy.MM.dd HH:mm #JSON 직렬화 시 날짜 포맷
+    time-zone : Asia/Seoul        #JSON 직렬화 시 시간대
+
+  mvc:   #Spring MVC의 데이터 바인딩 및 포맷팅 설정 (Thymeleaf, Controller 등)
+    format:
+      date: yyyy.MM.dd            # LocalDate, java.util.Date(날짜만) 포맷
+      time: HH:mm                 # LocalTime, java.util.Date(시간만) 포맷
+      date-time: yyyy.MM.dd HH:mm # LocalDateTime 포맷 (날짜+시간)
   profiles:
-    include: oauth
+    active: dev    # 현재 활성화할 프로필 (dev/prod)
+    include: oauth # 로그인 관련 추가설정도 함께 불러오기
