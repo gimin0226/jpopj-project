@@ -17,10 +17,10 @@ public class NaverUserInfo implements OAuthUserInfo {
     }
 
     @Override
-    public String getName() { return getRequired("name"); }
+    public String getName() { return (String)response.get("name"); }
 
     @Override
-    public String getEmail() { return getRequired("email"); }
+    public String getEmail() { return (String)response.get("email"); }
 
     @Override
     public String getPicture() {
