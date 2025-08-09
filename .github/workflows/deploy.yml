@@ -88,7 +88,7 @@ jobs:
             # 스크립트 실행 중 오류 발생 시 즉시 중단
             set -e
 
-            APP_DIR="/home/${{ secrets.EC2_USERNAME }}/app"
+            APP_DIR="/home/$USER/app"
             JAR_NAME="app.jar"
             LOG_FILE="$APP_DIR/app.log"
             
