@@ -96,7 +96,7 @@ jobs:
             echo "Stopping any running application..."
             # pkill로 프로세스를 찾지 못해도 오류가 발생하지 않도록 처리
             if pgrep -f $JAR_NAME; then
-              pkill -f $JAR_NAME
+              pkill -f $JAR_NAME || true
               # 프로세스가 완전히 종료될 시간을 준다.
               sleep 5
             fi
