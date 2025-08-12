@@ -87,111 +87,12 @@ jobs:
           debug: true
           command_timeout: 10m
           script: |
-            set -Eeuo pipefail
-            set -x
-            
-            APP_DIR="${APP_DIR:-$HOME/app}"
-            JAR_NAME="${JAR_NAME:-app.jar}"
-            JAR_PATH="$APP_DIR/$JAR_NAME"
-            
-            mkdir -p "$APP_DIR"
-            
-            # 1) 원격에 sh 호환 deploy.sh 생성 (PID 파일 방식)
-            cat > "$HOME/deploy.sh" <<'EOF'
-            #!/bin/sh
-            set -eu
-            
-            APP_DIR="${APP_DIR:-$HOME/app}"
-            JAR_NAME="${JAR_NAME:-app.jar}"
-            JAR_PATH="$APP_DIR/$JAR_NAME"
-            PID_FILE="${PID_FILE:-$APP_DIR/app.pid}"
-            LOG_FILE="${LOG_FILE:-$APP_DIR/app.log}"
-            JAVA_BIN="${JAVA_BIN:-java}"
-            JAVA_OPTS="${JAVA_OPTS:-}"
-            PROFILE="${SPRING_PROFILES_ACTIVE:-prod}"
-            START_CMD="$JAVA_BIN $JAVA_OPTS -jar \"$JAR_PATH\" --spring.profiles.active=$PROFILE"
-            
-            is_running() {
-              [ -f "$PID_FILE" ] || return 1
-              pid="$(cat "$PID_FILE" 2>/dev/null || true)"
-              [ -n "$pid" ] || return 1
-              kill -0 "$pid" 2>/dev/null || return 1
-              args="$(ps -o args= -p "$pid" 2>/dev/null || true)"
-              echo "$args" | grep -Fq "$JAR_NAME" || return 1
-              return 0
-            }
-            
-            start_app() {
-              mkdir -p "$APP_DIR"
-              if [ ! -f "$JAR_PATH" ]; then echo "ERROR: JAR not found: $JAR_PATH"; exit 1; fi
-              if is_running; then echo "Already running (PID $(cat "$PID_FILE"))."; return 0; fi
-              echo "Starting: $START_CMD"
-              nohup sh -c "$START_CMD" >> "$LOG_FILE" 2>&1 &
-              echo $! > "$PID_FILE"
-              sleep 2
-              if is_running; then
-                echo "Started (PID $(cat "$PID_FILE")). Recent logs:"
-                tail -n 80 "$LOG_FILE" || true
-              else
-                echo "ERROR: failed to start. Check logs: $LOG_FILE"; exit 1
-              fi
-            }
-            
-            stop_app() {
-              if ! is_running; then echo "Not running."; rm -f "$PID_FILE" || true; return 0; fi
-              pid="$(cat "$PID_FILE")"
-              echo "Stopping PID $pid..."
-              kill "$pid" 2>/dev/null || true
-              i=0
-              while [ $i -lt 15 ]; do
-                if ! kill -0 "$pid" 2>/dev/null; then break; fi
-                sleep 1
-                i=$((i+1))
-              done
-              if kill -0 "$pid" 2>/dev/null; then
-                echo "Force kill PID $pid"
-                kill -9 "$pid" 2>/dev/null || true
-              fi
-              rm -f "$PID_FILE" || true
-              echo "Stopped."
-            }
-            
-            cmd="${1:-}"
-            case "$cmd" in
-              start)
-                start_app
-                ;;
-              stop)
-                stop_app
-                ;;
-              restart)
-                stop_app
-                start_app
-                ;;
-              status)
-                if is_running; then
-                  echo "RUNNING (PID $(cat "$PID_FILE"))"
-                else
-                  echo "STOPPED"
-                fi
-                ;;
-              logs)
-                touch "$LOG_FILE"
-                tail -f "$LOG_FILE"
-                ;;
-              *)
-                echo "Usage: $0 {start|stop|restart|status|logs}"
-                exit 1
-                ;;
-            esac
-            EOF
-            
-            # 2) 개행 문제 방지 + 구문 체크 + 실행권한
-            sed -i 's/\r$//' "$HOME/deploy.sh"
-            chmod +x "$HOME/deploy.sh"
-            # bash로도 파싱 가능하면 더 안전 (없으면 무시)
-            command -v bash >/dev/null 2>&1 && bash -n "$HOME/deploy.sh" || true
-            
-            # 3) 배포 수행
-            "$HOME/deploy.sh" stop || true
-            "$HOME/deploy.sh" start
+          # 'pgrep'으로 'java' 프로세스의 PID(프로세스 ID)를 찾아서 'kill -9' 명령으로 강제 종료합니다.
+          # '|| true'는 실행 중인 java 프로세스가 없어 pgrep이 실패하더라도, 스크립트 전체가 중단되지 않도록 합니다.
+            pgrep java | xargs kill -9 || true
+
+          # 새로 전송된 .jar 파일을 백그라운드에서 실행합니다.
+          # 'nohup'을 사용하여 SSH 세션이 끊겨도 애플리케이션이 계속 실행되도록 합니다.
+          # '--spring.profiles.active=prod'는 Spring Boot 애플리케이션의 실행 프로파일을 'prod'(운영 환경)로 설정합니다.
+          # '> nohup.out 2>&1 &'는 애플리케이션의 모든 표준 출력(stdout)과 표준 에러(stderr)를 'nohup.out' 파일로 리디렉션하여 로그를 기록하고, 프로세스를 백그라운드에서 실행시킵니다.
+            nohup java -jar /home/***/app/app.jar --spring.profiles.active=prod > /home/***/app/nohup.out 2>&1 &
