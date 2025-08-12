@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * ✅ OAuth2 로그인 요청 시 Authorization Request를 가로채서
  * provider에 따라 prompt 파라미터를 추가하는 Resolver
- * (Google: 항상 계정 선택 / Naver: 항상 로그인)
+ * (Google: 항상  계정 선택 / Naver: 항상 로그인)
  */
 @RequiredArgsConstructor
 public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
