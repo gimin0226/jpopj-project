@@ -32,7 +32,7 @@ spring:
     # Hibernate가 JPA-> SQL 변환을 할 때 DBMS 별 문법 차이를 맞춰주는 번역기 역할을 함
     # 데이터베이스마다 SQL 문법, 함수, 키워드가 조금씩 다르기 때문에
     show-sql: true      # 콘솔에 SQL 출력
-    generate-ddl: true  #DDL 생성 여부
+    generate-ddl: true  #DDL 생성 여부kj
 
   jackson: # JSON 변환 (Jackson 라이브러리) 관련 설정
     date-format: yyyy.MM.dd HH:mm #JSON 직렬화 시 날짜 포맷
