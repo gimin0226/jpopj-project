@@ -34,16 +34,16 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 
 ## 기술 스택
 
-| 분류 | 기술                                |
-|------|-----------------------------------|
-| Language | Java 17                           |
+| 분류 | 기술                   |
+|------|----------------------|
+| Language | Java 17              |
 | Framework | Spring Boot, Spring Security, JPA |
-| Database | MySQL, ~~Redis~~                      |
-| Build Tool | Gradle                            |
-| Frontend | Thymeleaf, html/css               |
-| Deployment | ~~AWS EC2, RDS, Nginx~~           |
-| Version Control | ~~Git, GitHub~~                   |
-| CI/CD | ~~GitHub Actions~~                |
+| Database | MySQL, ~~Redis~~         |
+| Build Tool | Gradle               |
+| Frontend | Thymeleaf, html/css  |
+| Deployment | AWS EC2, RDS, Nginx  |
+| Version Control | Git, GitHub          |
+| CI/CD | GitHub Actions       |
 ###### 취소선으로 표시된 기술 스택은 현재 적용되지는 않았지만, 추후 도입을 계획하고 있는 기술입니다.
 
 ## 실행 화면
@@ -80,16 +80,6 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 ###### 개발 완료한 기능은 취소선 표시
 <details>
 <summary>추가로 개발할 기능</summary>
- 
-- ~~post, user,comment 애그리거트 만들기~~
-
- - ~~각 애그리거트 도메인에 해당하는 controller, service, repository 작성하기~~
- 
-- ~~게시물 작성 기능~~
-
- - ~~댓글 작성 기능~~
-
- - ~~oauth2를 이용한 로그인 기능~~
 
  - ~~[post 애그리거트 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)~~
 
@@ -104,6 +94,7 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
  - ~~[네이버 OAuth2 로그인 기능 추가하기](https://long-feather-730.notion.site/OAuth2-240a987f6c408033b6fadb30f4bf0629)~~
 
  - ~~[OAuth2 로그인 시, 구글 계정 선택 항상 다시 물어보게 만들기](https://long-feather-730.notion.site/OAuth2-248a987f6c4080d6b4c7ef73e014e91a)~~
+
  - 게시물 삭제 기능
 
  - 게시물 수정 기능
@@ -125,8 +116,6 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
  - 글 작성하면 작성자 닉네임으로 표시(현재 작성자 이름으로 표시)
 
  - 로그인 페이지 만들기
-
- - 다른 소셜 로그인 추가하기(naver)
 
  - 로그인 jwt로 구현하기
 
