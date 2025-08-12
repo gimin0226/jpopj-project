@@ -86,19 +86,4 @@ jobs:
           script_stop: true
           debug: true
           script: |
-            # 기존 Java 프로세스 종료
-            pgrep java | xargs kill -9 || true
-
-            # 환경 변수 설정 (필요시)
-            export JAVA_HOME="/usr/lib/jvm/java-17-amazon-corretto"
-            export PATH=$PATH:$JAVA_HOME/bin
-
-            # 스크립트 파일을 생성하여 백그라운드에서 실행
-            # 이렇게 하면 SSH 세션이 종료되어도 스크립트가 안정적으로 실행됩니다.
-            cat << 'EOF' > /home/***/app/deploy.sh
-            nohup java -jar /home/***/app/app.jar --spring.profiles.active=prod > /home/***/app/nohup.out 2>&1 &
-            EOF
-
-            # 생성된 스크립트에 실행 권한을 부여하고 실행
-            chmod +x /home/***/app/deploy.sh
-            /home/***/app/deploy.sh
+            /home/ubuntu/app/deploy.sh
