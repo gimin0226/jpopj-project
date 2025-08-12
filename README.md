@@ -101,8 +101,9 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 
  - ~~[커스텀 ArgumentResolver로 컨트롤러 중복 코드 리팩토링하기](https://long-feather-730.notion.site/ArgumentResolver-240a987f6c4080d6962cf83941d44216?pvs=74)~~
 
- - ~~[네이버 OAuth2 로그인 기능 추가하기]()~~
+ - ~~[네이버 OAuth2 로그인 기능 추가하기](https://long-feather-730.notion.site/OAuth2-240a987f6c408033b6fadb30f4bf0629)~~
 
+ - ~~[OAuth2 로그인 시, 구글 계정 선택 항상 다시 물어보게 만들기](https://long-feather-730.notion.site/OAuth2-248a987f6c4080d6b4c7ef73e014e91a)~~
  - 게시물 삭제 기능
 
  - 게시물 수정 기능
