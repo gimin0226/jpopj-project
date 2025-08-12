@@ -26,7 +26,7 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
         this.defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(repo, baseUri);
     }
 
-    // 요청을 기반으로 AuthorizationRequest를 생성 (기본 요청을 커스터마이징)
+    // 요청을 기반으로 AuthorizationRequest를  생성 (기본 요청을 커스터마이징)
     // "/oauth2/authorization/google" 과 같이 경로가 넘어오는 경우
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
