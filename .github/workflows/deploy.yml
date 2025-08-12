@@ -85,25 +85,37 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           # EC2 인스턴스에서 실행될 셸 스크립트 내용입니다.
           script: |
-            # 스크립트 실행 중 오류 발생 시 즉시 중단
-            set -e
+            set -Eeuo pipefail
 
-            APP_DIR="/home/$USER/app"
-            JAR_NAME="app.jar"
+            APP_DIR="${APP_DIR:-$HOME/app}"
+            JAR_NAME="${JAR_NAME:-app.jar}"
             LOG_FILE="$APP_DIR/app.log"
-            
-            # 실행 중인 애플리케이션 프로세스 종료
-            echo "Stopping any running application..."
-            # pkill로 프로세스를 찾지 못해도 오류가 발생하지 않도록 처리
-            if pgrep -f $JAR_NAME; then
-              pkill -f $JAR_NAME || true
-              # 프로세스가 완전히 종료될 시간을 준다.
+
+            echo "whoami=$(whoami) HOME=$HOME APP_DIR=$APP_DIR"
+            mkdir -p "$APP_DIR"
+
+            # 조용히 체크
+            if pgrep -f "$JAR_NAME" >/dev/null 2>&1; then
+              echo "Stopping running app..."
+              pkill -f "$JAR_NAME" || true
               sleep 5
             fi
-            
-            # 애플리케이션 디렉토리로 이동
-            cd $APP_DIR
-            
-            # 새로운 JAR 파일로 애플리케이션 실행
+
+            cd "$APP_DIR"
+
+            # JAR 존재 확인
+            if [ ! -f "$JAR_NAME" ]; then
+              echo "ERROR: $APP_DIR/$JAR_NAME not found"; exit 1
+            fi
+
             echo "Starting application..."
-            nohup java -jar $JAR_NAME --spring.profiles.active=prod > $LOG_FILE 2>&1 &
+            nohup java -jar "$JAR_NAME" --spring.profiles.active=prod >> "$LOG_FILE" 2>&1 &
+
+            # 기동 확인
+            sleep 2
+            if pgrep -f "$JAR_NAME" >/dev/null 2>&1; then
+              echo "App started. Recent logs:"
+              tail -n 50 "$LOG_FILE" || true
+            else
+              echo "ERROR: app failed to start"; exit 1
+            fi
