@@ -75,7 +75,7 @@ jobs:
           # EC2 인스턴스 내에 파일이 저장될 목적지 경로입니다.
           target: "/home/${{ secrets.EC2_USERNAME }}/app"
 
-      # 7. EC2에 접속하여 배포 스크립트 실행
+      # 7. EC2에 접속하여 배포 스크립트 실행k
       # 'appleboy/ssh-action' 액션을 사용하여 EC2 인스턴스에 원격으로 접속하고, 배포 스크립트를 실행합니다.
       - name: Deploy to EC2 (PID file, sh-compatible)
         uses: appleboy/ssh-action@v1.0.3
