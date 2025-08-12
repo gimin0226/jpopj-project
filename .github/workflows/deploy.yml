@@ -61,9 +61,18 @@ jobs:
           mv "$BOOT_JAR" app.jar
           ls -al app.jar
 
-      # 6. 빌드된 JAR 파일을 EC2로 전송
+      # 6. GitHub Secrets를 사용하여 설정 파일 생성
+      # Actions Runner(가상 머신)에 PROD_YML Secret의 내용을 application-prod.yml 파일로 생성합니다.
+      - name: Create application-prod.yml
+        run: echo "${{ secrets.PROD_YML }}" > ./application-prod.yml
+
+      # OAUTH_YML Secret의 내용을 application-oauth.yml 파일로 생성합니다.
+      - name: Create application-oauth.yml
+        run: echo "${{ secrets.OAUTH_YML }}" > ./application-oauth.yml
+
+      # 7. 빌드된 JAR 파일들과 설정 파일들을 EC2로 전송
       # 'appleboy/scp-action' 액션을 사용하여 빌드된 .jar 파일을 EC2 인스턴스로 안전하게 복사(전송)합니다.
-      - name: Transfer JAR to EC2
+      - name: Transfer Files to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           # GitHub 리포지토리의 'Settings > Secrets'에 미리 저장해 둔 민감한 정보들을 불러와 사용합니다.
@@ -71,11 +80,11 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }} # EC2 접속 유저 이름 (예: ubuntu, ec2-user)
           key: ${{ secrets.EC2_SSH_KEY }}       # EC2 접속을 위한 프라이빗 키 (.pem 파일의 내용)
           # 전송할 파일의 위치를 지정합니다. 여기서는 빌드 결과물인 모든 .jar 파일을 의미합니다.
-          source: "app.jar"
+          source: "app.jar, application-prod.yml, application-oauth.yml"
           # EC2 인스턴스 내에 파일이 저장될 목적지 경로입니다.
           target: "/home/${{ secrets.EC2_USERNAME }}/app"
 
-      # 7. EC2에 접속하여 배포 스크립트 실행
+      # 8. EC2에 접속하여 배포 스크립트 실행
       # 'appleboy/ssh-action' 액션을 사용하여 EC2 인스턴스에 원격으로 접속하고, 배포 스크립트를 실행합니다.
       - name: Deploy to EC2 (PID file, sh-compatible)
         uses: appleboy/ssh-action@v1.0.3
