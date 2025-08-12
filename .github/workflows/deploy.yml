@@ -85,14 +85,20 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
           debug: true
-          command_timeout: 10m
           script: |
-          # 'pgrep'으로 'java' 프로세스의 PID(프로세스 ID)를 찾아서 'kill -9' 명령으로 강제 종료합니다.
-          # '|| true'는 실행 중인 java 프로세스가 없어 pgrep이 실패하더라도, 스크립트 전체가 중단되지 않도록 합니다.
+            # 기존 Java 프로세스 종료
             pgrep java | xargs kill -9 || true
 
-          # 새로 전송된 .jar 파일을 백그라운드에서 실행합니다.
-          # 'nohup'을 사용하여 SSH 세션이 끊겨도 애플리케이션이 계속 실행되도록 합니다.
-          # '--spring.profiles.active=prod'는 Spring Boot 애플리케이션의 실행 프로파일을 'prod'(운영 환경)로 설정합니다.
-          # '> nohup.out 2>&1 &'는 애플리케이션의 모든 표준 출력(stdout)과 표준 에러(stderr)를 'nohup.out' 파일로 리디렉션하여 로그를 기록하고, 프로세스를 백그라운드에서 실행시킵니다.
+            # 환경 변수 설정 (필요시)
+            export JAVA_HOME="/usr/lib/jvm/java-17-amazon-corretto"
+            export PATH=$PATH:$JAVA_HOME/bin
+
+            # 스크립트 파일을 생성하여 백그라운드에서 실행
+            # 이렇게 하면 SSH 세션이 종료되어도 스크립트가 안정적으로 실행됩니다.
+            cat << 'EOF' > /home/***/app/deploy.sh
             nohup java -jar /home/***/app/app.jar --spring.profiles.active=prod > /home/***/app/nohup.out 2>&1 &
+            EOF
+
+            # 생성된 스크립트에 실행 권한을 부여하고 실행
+            chmod +x /home/***/app/deploy.sh
+            /home/***/app/deploy.sh
