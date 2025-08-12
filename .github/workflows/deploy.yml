@@ -83,8 +83,20 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true #에러 시 즉시 스탭 실패
+          debug: true # 액션 자체 디버그 출력
+          command_timeout: 10m #원격 명령 타임아웃 여유
           # EC2 인스턴스에서 실행될 셸 스크립트 내용입니다.
           script: |
+            # 실패 즉시 중단 + 파이프 에러 전파 + unset 변수 에러
+            set -Eeuo pipefail
+            
+            # 실행되는 커맨드까지 출력
+            set -x
+            
+            # 에러 난 줄과 명령어 찍기
+            trap 'echo "[ERR] line $LINENO: $BASH_COMMAND" >&2' ERR
+  
             set -Eeuo pipefail
 
             APP_DIR="${APP_DIR:-$HOME/app}"
@@ -92,6 +104,8 @@ jobs:
             LOG_FILE="$APP_DIR/app.log"
 
             echo "whoami=$(whoami) HOME=$HOME APP_DIR=$APP_DIR"
+            test -d "$APP_DIR" || { echo "ERROR: $APP_DIR not found"; exit 1; }
+            ls -al "$APP_DIR"
             mkdir -p "$APP_DIR"
 
             # 조용히 체크
