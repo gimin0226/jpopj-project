@@ -28,6 +28,7 @@ public class PostsApiController {
         postsService.update(id, requestDto);
         return "redirect:/"+requestDto.getCategory();
     }
+    //kjljljlk
 
 
 }
