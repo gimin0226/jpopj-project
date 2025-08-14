@@ -44,5 +44,5 @@ spring:
       time: HH:mm                 # LocalTime, java.util.Date(시간만) 포맷
       date-time: yyyy.MM.dd HH:mm # LocalDateTime 포맷 (날짜+시간)
   profiles:
-    active: prod    # 현재 활성화할 프로필 (dev/prod)
+    active: dev    # 현재 활성화할 프로필 (dev/prod)
     include: oauth # 로그인 관련 추가설정도 함께 불러오기
