@@ -81,9 +81,9 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 <details>
 <summary>추가로 개발할 기능</summary>
 
- - ~~[post 애그리거트 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)~~
+ - ~~[post 도메인 엔티티 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)~~
 
- - ~~[User 애그리거트 루트에 Nickname VO 추가하기](https://www.notion.so/User-Nickname-VO-23da987f6c4080b7a00ef6b9adc971ff)~~
+ - ~~[User 엔티티에 Nickname VO 추가하기](https://www.notion.so/User-Nickname-VO-23da987f6c4080b7a00ef6b9adc971ff)~~
 
  - ~~[소셜 로그인 후 추가 정보 입력받기](https://www.notion.so/23fa987f6c40808b98fef34bdffb62ae)~~
 
@@ -110,8 +110,6 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
  - 게시글이 많아졌을 때 페이징 기능 만들기
  
  - 홈화면 만들기(홈페이지 만들 시 인기 게시물 조회수 OR 좋아요 정렬로 홈 화면에 보이기)
- 
- - User 애그리거트에 닉네임 필드 추가하기(닉네임 중복 검사 필수)
 
  - 글 작성하면 작성자 닉네임으로 표시(현재 작성자 이름으로 표시)
 
@@ -128,10 +126,6 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
  - Oauth2로 사용자 정보 받았을 때 추가 정보 얻는 페이지 만들고 추가 정보도 같이 사용자 정보에 등록하기
 
  - PostCreateRequestDto에서 userName으로 저장하지 않고 userId로 저장하기(usrName은 바뀔수도 있기 때문)(userId로 저장 후 데이터베이스로 조회해서 userName 꺼내오기)(userName에서 userNickname으로 변경도 해야함)
-
- - Like 애그리거트 만들기
-
- - Report 애그리거트 만들기
 
  - 가수 정보 애그리거트로 만들기
 

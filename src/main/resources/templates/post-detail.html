@@ -82,7 +82,14 @@
 
     <div class="post-actions">
         <a th:href="@{'/' + ${post.category}}" class="btn-back">← 목록으로</a>
+
+        <!-- 삭제 버튼 (작성자만 보이게)-->
+        <button th:if ="${session.user != null and session.user.id == post.userId}"
+                type ="button" class="btn-delete"
+                th:onclick="|deletePost(${post.postId})|">삭제</button>
     </div>
+
 </div>
+<script src="/js/post-delete.js"></script>
 </body>
 </html>

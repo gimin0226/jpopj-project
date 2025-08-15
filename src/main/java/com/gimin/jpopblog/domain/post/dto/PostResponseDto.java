@@ -18,9 +18,11 @@ public class PostResponseDto {
     private String userNickname;
     private TagType category;
     private LocalDateTime createdDate;
+    private Long userId;
 
     public static PostResponseDto from(Post post){
         PostResponseDto dto = new PostResponseDto();
+        dto.userId = post.getUser().getId();
         dto.postId = post.getPostId();
         dto.title = post.getTitle();
         dto.content = post.getContent();

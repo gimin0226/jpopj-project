@@ -7,6 +7,7 @@ import com.gimin.jpopblog.global.config.auth.dto.SessionUser;
 import com.mysql.cj.Session;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,5 +31,9 @@ public class PostsApiController {
     }
     //안녕
 
-
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id, @SessionAttribute("user") SessionUser sessionUser){
+        postsService.delete(id,sessionUser);
+        return ResponseEntity.noContent().build();
+    }
 }

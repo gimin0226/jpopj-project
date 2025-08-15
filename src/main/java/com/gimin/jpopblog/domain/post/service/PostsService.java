@@ -2,6 +2,8 @@ package com.gimin.jpopblog.domain.post.service;
 
 import com.gimin.jpopblog.domain.post.entity.Post;
 import com.gimin.jpopblog.domain.post.entity.TagType;
+import com.gimin.jpopblog.domain.post.exception.PostDeleteAccessDeniedException;
+import com.gimin.jpopblog.domain.post.exception.PostNotFoundException;
 import com.gimin.jpopblog.domain.post.repository.PostsRepository;
 
 import com.gimin.jpopblog.domain.post.dto.PostResponseDto;
@@ -61,4 +63,19 @@ public class PostsService {
                 .map(PostSummaryDto::from)
                 .toList();
     }
+
+    @Transactional
+    public void delete(Long postId, SessionUser sessionUser){
+        System.out.println("게시글 도메인 가져오기");
+        Post post = postsRepository.findByIdWithUser(postId)
+                .orElseThrow(()->new PostNotFoundException(postId));
+        System.out.println("삭제 전 게시글 작성자와 로그인 사용자가 일치하는지 검증");
+        if(!post.getUser().getId().equals(sessionUser.getId())){
+            throw new PostDeleteAccessDeniedException("작성자만 삭제할 수 있습니다.");
+        }
+        System.out.println("지금 삭제하겠습니다");
+        postsRepository.delete(post);
+        System.out.println("삭제되었습니다");
+    }
+
 }
