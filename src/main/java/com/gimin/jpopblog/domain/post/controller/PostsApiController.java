@@ -29,7 +29,7 @@ public class PostsApiController {
         postsService.update(id, requestDto);
         return "redirect:/"+requestDto.getCategory();
     }
-    //안녕
+
 
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id, @SessionAttribute("user") SessionUser sessionUser){
