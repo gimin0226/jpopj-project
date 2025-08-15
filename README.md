@@ -132,7 +132,7 @@ JPOP 음악 팬들을 위한 커뮤니티 서비스로,
 
 </details>
 
-## 추가로 적용할 기술(https://long-feather-730.notion.site/242a987f6c408014a1e2e928dd078ba8?pvs=73)
+## [추가로 적용할 기술](https://long-feather-730.notion.site/242a987f6c408014a1e2e928dd078ba8?pvs=73)
 ###### 개발 완료한 기능은 취소선 표시
 <details>
 <summary>추가로 적용할 기술</summary>
