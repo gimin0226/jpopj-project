@@ -7,12 +7,12 @@
 
 ## 📌 목차
 - [1. 프로젝트 소개](#프로젝트-소개)
-- [2. 주요 기능](#주요-기능)
+- [2. 배포 사이트](#배포-사이트)
 - [3. 기술 스택](#기술-스택)
-- [4. 실행 화면](#실행-화면)
-- [5. 시스템 설계](#시스템-설계)
-- [6. 추가로 개발할 기능](#추가로-개발할-기능)
-- [7. 추가로 적용할 기술](#추가로-적용할-기술)
+- [4. 프로젝트에 도입한 기술들](#프로젝트에-도입한-기술들)
+- [5. 실행 화면](#실행-화면)
+- [6. 시스템 설계](#시스템-설계)
+- [7. 추가 기능 개발](#추가-기능-개발)
 
 
 ---
@@ -26,15 +26,6 @@
 ---
 ## 배포 사이트
 [JPOPJ](https://jpopj.com)
-
----
-## 프로젝트에 도입한 기술들
-- AWS EC2 배포하기
-- AWS RDS로 MySQL 서버 띄우기
-- EC2 인스턴스에 Elastic IP 연결하기
-- 리버스 프록시(Nginx)로 포트 포워딩하기
-- 개인 도메인 구매(jpopj.com) 후 Elastic IP 연결하기
-- Github Action으로 CI/CD 구축하기
 
 ---
 ## 기술 스택
@@ -53,6 +44,16 @@
  
 ###### 취소선으로 표시된 기술 스택은 현재 적용되지는 않았지만, 추후 도입을 계획하고 있는 기술입니다.
 
+---
+## 프로젝트에 도입한 기술들
+- AWS EC2 배포하기
+- AWS RDS로 MySQL 서버 띄우기
+- EC2 인스턴스에 Elastic IP 연결하기
+- 리버스 프록시(Nginx)로 포트 포워딩하기
+- 개인 도메인 구매(jpopj.com) 후 Elastic IP 연결하기
+- Github Action으로 CI/CD 구축하기
+
+---
 ## 실행 화면
 <details>
 <summary>게시판 목록</summary>
@@ -78,70 +79,38 @@
 ![4.png](src/main/resources/static/images/4.png)
 </details>
 
+---
+
 ## 시스템 설계
 
 ### 1. ERD 설계
 ![erd.png](src/main/resources/static/images/erd.png)
+
 ###### 최종 ERD가 아니며 도메인을 추가하며 변경할 예정입니다.
----
 
 ### 2. API 설계
-## [추가로 개발할 기능](https://long-feather-730.notion.site/23da987f6c4080fcb932ed9eb2f8390e)
-###### 개발 완료한 기능은 취소선 표시
+
+---
+## [추가 기능 개발](https://long-feather-730.notion.site/23da987f6c4080fcb932ed9eb2f8390e)
+###### 앞으로도 기능을 지속적으로 확장해 나갈 예정입니다.
 <details>
-<summary>추가로 개발할 기능</summary>
+<summary>추가 기능 개발</summary>
 
- - ~~[post 도메인 엔티티 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)~~
+ - [post 도메인 엔티티 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)
 
- - ~~[User 엔티티에 Nickname VO 추가하기](https://www.notion.so/User-Nickname-VO-23da987f6c4080b7a00ef6b9adc971ff)~~
+ - [User 엔티티에 Nickname VO 추가하기](https://www.notion.so/User-Nickname-VO-23da987f6c4080b7a00ef6b9adc971ff)
 
- - ~~[소셜 로그인 후 추가 정보 입력받기](https://www.notion.so/23fa987f6c40808b98fef34bdffb62ae)~~
+ - [소셜 로그인 후 추가 정보 입력받기](https://www.notion.so/23fa987f6c40808b98fef34bdffb62ae)
 
- - ~~[★★★Spring Security 로그아웃 동작원리 분석★★★](https://long-feather-730.notion.site/23fa987f6c40804cbd7eed2aaa24fe5f?pvs=74)~~
+ - [★★★Spring Security 로그아웃 동작원리 분석★★★](https://long-feather-730.notion.site/23fa987f6c40804cbd7eed2aaa24fe5f?pvs=74)
 
- - ~~[커스텀 ArgumentResolver로 컨트롤러 중복 코드 리팩토링하기](https://long-feather-730.notion.site/ArgumentResolver-240a987f6c4080d6962cf83941d44216?pvs=74)~~
+ - [커스텀 ArgumentResolver로 컨트롤러 중복 코드 리팩토링하기](https://long-feather-730.notion.site/ArgumentResolver-240a987f6c4080d6962cf83941d44216?pvs=74)
 
- - ~~[네이버 OAuth2 로그인 기능 추가하기](https://long-feather-730.notion.site/OAuth2-240a987f6c408033b6fadb30f4bf0629)~~
+ - [네이버 OAuth2 로그인 기능 추가하기](https://long-feather-730.notion.site/OAuth2-240a987f6c408033b6fadb30f4bf0629)
 
- - ~~[OAuth2 로그인 시, 구글 계정 선택 항상 다시 물어보게 만들기](https://long-feather-730.notion.site/OAuth2-248a987f6c4080d6b4c7ef73e014e91a)~~
+ - [OAuth2 로그인 시, 구글 계정 선택 항상 다시 물어보게 만들기](https://long-feather-730.notion.site/OAuth2-248a987f6c4080d6b4c7ef73e014e91a)
 
- - ~~[게시물 삭제 기능 만들기](https://long-feather-730.notion.site/250a987f6c4080838b8bfabcb4a807fe?pvs=74)~~
-
- - 게시물 수정 기능
-
- - 댓글 삭제 기능
-
- - 댓글 수정 기능
-
- - 회원탈퇴 기능 
-
- - 로그아웃 기능
-
- - 게시판 도메인으로 빼기(new,talk등)
-
- - 게시글이 많아졌을 때 페이징 기능 만들기
- 
- - 홈화면 만들기(홈페이지 만들 시 인기 게시물 조회수 OR 좋아요 정렬로 홈 화면에 보이기)
-
- - 글 작성하면 작성자 닉네임으로 표시(현재 작성자 이름으로 표시)
-
- - 로그인 페이지 만들기
-
- - 로그인 jwt로 구현하기
-
- - 자체 로그인 폼 구현하기
-
- - 사용자 정보 페이지 기능 추가해서 만들기(로그아웃, 회원정보 변경 등)
-
- - 페이지별 로그인 유무 제대로 파악하기
-
- - Oauth2로 사용자 정보 받았을 때 추가 정보 얻는 페이지 만들고 추가 정보도 같이 사용자 정보에 등록하기
-
- - PostCreateRequestDto에서 userName으로 저장하지 않고 userId로 저장하기(usrName은 바뀔수도 있기 때문)(userId로 저장 후 데이터베이스로 조회해서 userName 꺼내오기)(userName에서 userNickname으로 변경도 해야함)
-
- - 가수 정보 도메인으로 만들기
-
- - 홈화면에 오늘 하루 가장 많이 조회 or 언급된 가수 top5 나열하기
+ - [게시물 삭제 기능 만들기](https://long-feather-730.notion.site/250a987f6c4080838b8bfabcb4a807fe?pvs=74)
 
 </details>
 
