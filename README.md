@@ -92,10 +92,6 @@
 
 ---
 ## [추가 기능 개발](https://long-feather-730.notion.site/23da987f6c4080fcb932ed9eb2f8390e)
-###### 앞으로도 기능을 지속적으로 확장해 나갈 예정입니다.
-<details>
-<summary>추가 기능 개발</summary>
-
  - [post 도메인 엔티티 리펙토링](https://long-feather-730.notion.site/Post-23da987f6c4080709982f0ef7a71da63)
 
  - [User 엔티티에 Nickname VO 추가하기](https://www.notion.so/User-Nickname-VO-23da987f6c4080b7a00ef6b9adc971ff)
@@ -111,6 +107,4 @@
  - [OAuth2 로그인 시, 구글 계정 선택 항상 다시 물어보게 만들기](https://long-feather-730.notion.site/OAuth2-248a987f6c4080d6b4c7ef73e014e91a)
 
  - [게시물 삭제 기능 만들기](https://long-feather-730.notion.site/250a987f6c4080838b8bfabcb4a807fe?pvs=74)
-
-</details>
-
+###### 앞으로도 기능을 지속적으로 확장해 나갈 예정입니다.
