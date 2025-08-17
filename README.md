@@ -28,7 +28,15 @@
 [JPOPJ](https://jpopj.com)
 
 ---
+## 프로젝트에 도입한 기술들
+- AWS EC2 배포하기
+- AWS RDS로 MySQL 서버 띄우기
+- EC2 인스턴스에 Elastic IP 연결하기
+- 리버스 프록시(Nginx)로 포트 포워딩하기
+- 개인 도메인 구매(jpopj.com) 후 Elastic IP 연결하기
+- Github Action으로 CI/CD 구축하기
 
+---
 ## 기술 스택
 
 | 분류              | 기술                                          |
@@ -41,7 +49,7 @@
 | Deployment      | AWS EC2, RDS, ~~S3~~, ~~Docker~~, ~~Nginx~~ |
 | Version Control | Git, GitHub                                 |
 | CI/CD           | GitHub Actions                              |
-| Messaging       | Kafka                                       |
+| Messaging       | ~~Kafka~~                                   |
  
 ###### 취소선으로 표시된 기술 스택은 현재 적용되지는 않았지만, 추후 도입을 계획하고 있는 기술입니다.
 
@@ -137,35 +145,3 @@
 
 </details>
 
-## [추가로 적용할 기술](https://long-feather-730.notion.site/242a987f6c408014a1e2e928dd078ba8?pvs=73)
-###### 개발 완료한 기능은 취소선 표시
-<details>
-<summary>추가로 적용할 기술</summary>
- 
-- ~~[AWS EC2 배포하기](https://long-feather-730.notion.site/AWS-EC2-242a987f6c4080debe6cec47ac5a924b?pvs=74)~~ 
-
-- ~~[AWS RDS로 MySQL 서버 띄우기](https://long-feather-730.notion.site/AWS-RDS-MySQL-242a987f6c408056bdfed71ab65150d3)~~
-
-- ~~[Elastic IP 연결하기](https://long-feather-730.notion.site/Elatic-IP-246a987f6c40805eaceff460b5019a3d)~~ 
-
-- ~~[리버스 프록시(Nginx)로 포트 포워딩하기](https://long-feather-730.notion.site/Nginx-246a987f6c4080cb9017f1eb20a53c3c)~~
-
-- ~~[개인 도메인 구매 후 elastic IP 연결하기(https 연결 & SSL 인증서 발급)](https://long-feather-730.notion.site/elastic-IP-https-SSL-247a987f6c40809ba078f148b1729e05)~~
-
-- ~~[Github Action으로 CI/CD 구축하기](https://long-feather-730.notion.site/Github-Action-CI-CD-24aa987f6c40803ca4bec4bfa6e7a2de)~~
-
-- [JUnit을 활용한 단위 테스트 작성]
-
-- AWS EC2를 활용한 배포 환경 구성
-
-- 게시글 이미지 S3 저장 기능 도입
-
-- Nginx를 통한 로드 밸런싱 적용
-
-- Github actions를 통한 CI/CD 자동화
-
-- Redis로 좋아요/댓글 수, 인기게시물 캐싱
-
-- Elasticsearch를 통한 검색 기능 개선
-
-</details>
