@@ -39,7 +39,7 @@ public class SecurityConfig{
                 // 4.요청별 접근 권한 설정
                 .authorizeHttpRequests(auth->auth
                         // 정적 리소스 및 공개 페이지는 모두 허용
-                        .requestMatchers("/","/css/**","/images/**","/js/**","/h2-console/**","/NEW","/ARTIST","/REVIEW","/TALK","/CONCERT").permitAll()
+                        .requestMatchers("/","/css/**","/images/**","/js/**","/h2-console/**","/NEW","/ARTIST","/REVIEW","/TALK","/CONCERT","/posts/{postId}").permitAll()
                         // "/api/v1/**" 경로는 USER 권한 이상만 접근 가능
                         .requestMatchers("/api/v1/**").hasRole(Role.USER.name()) //.name()은 "USER" 리턴 -> hasRole에는 "ROLE_"없이 넣지만 내부적으로 "ROLE_"이 붙어서 비교됨
                         //그 외 모든 요청은 인증 필요
