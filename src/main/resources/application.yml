@@ -43,6 +43,10 @@ spring:
       date: yyyy.MM.dd            # LocalDate, java.util.Date(날짜만) 포맷
       time: HH:mm                 # LocalTime, java.util.Date(시간만) 포맷
       date-time: yyyy.MM.dd HH:mm # LocalDateTime 포맷 (날짜+시간)
+    hiddenmethod:         #HTML <form> 태그에서 method="post"로 전송할 때 <input type="hidden" name="_method" value="put|patch|delete"/> 형식으로
+      filter:             # 숨겨진 필드를 해석해 실제 HTTP 메서드(PUT, PATCH, DELETE)로 변환해 주는 기능을 킨다.
+        enabled: true     # 이 설정이 없으면 폼에서는 GET/POST만 전송 가능하고 PATCH/PUT/DELETE는 동작하지 않는다.
+
   profiles:
     active: dev    # 현재 활성화할 프로필 (dev/prod)
     include: oauth # 로그인 관련 추가설정도 함께 불러오기

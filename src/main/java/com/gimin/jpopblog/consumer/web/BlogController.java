@@ -27,9 +27,11 @@ public class BlogController {
 
     @GetMapping(value = {"/", "/{category}"})
     public String blogPage(@PathVariable(required = false) String category, Model model) {
+
         category= (category==null)?"NEW":category.toUpperCase();
         System.out.println(category);
         TagType activeCategory = TagType.from(category);
+
 
         List<PostSummaryDto> posts = postsService.findByCategory(activeCategory);
 
@@ -49,24 +51,11 @@ public class BlogController {
         model.addAttribute("user",user);
         return "profile";
     }
-    @GetMapping(value = {"/write"})
-    public String blogWritePage(Model model){
-        model.addAttribute("post",new PostCreateRequestDto());
-        return "write";
-    }
 
     @GetMapping("/login")
     public String blogLoginPage(Model model){
         return "login";
     }
 
-    @GetMapping("/posts/{postId}")
-    public String viewPostDetail(@PathVariable Long postId, Model model){
-        PostResponseDto dto = postsService.findById(postId);
-        List<CommentResponseDto> comments = commentService.findByPostIdOrderedByCreatedDateAsc(postId);
-        model.addAttribute("post",dto);
-        model.addAttribute("comments",comments);
-        System.out.println("게시글 상세 페이지 controller");
-        return "post-detail";
-    }
+
 }

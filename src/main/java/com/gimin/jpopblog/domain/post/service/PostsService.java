@@ -1,20 +1,16 @@
 package com.gimin.jpopblog.domain.post.service;
 
+import com.gimin.jpopblog.domain.post.dto.*;
 import com.gimin.jpopblog.domain.post.entity.Post;
 import com.gimin.jpopblog.domain.post.entity.TagType;
-import com.gimin.jpopblog.domain.post.exception.PostDeleteAccessDeniedException;
+import com.gimin.jpopblog.domain.post.exception.PostAccessDeniedException;
 import com.gimin.jpopblog.domain.post.exception.PostNotFoundException;
 import com.gimin.jpopblog.domain.post.repository.PostsRepository;
 
-import com.gimin.jpopblog.domain.post.dto.PostResponseDto;
-import com.gimin.jpopblog.domain.post.dto.PostCreateRequestDto;
-import com.gimin.jpopblog.domain.post.dto.PostSummaryDto;
-import com.gimin.jpopblog.domain.post.dto.PostUpdateRequestDto;
 import com.gimin.jpopblog.domain.user.entity.User;
 import com.gimin.jpopblog.domain.user.repository.UserRepository;
 import com.gimin.jpopblog.global.config.auth.dto.SessionUser;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -44,13 +40,26 @@ public class PostsService {
         return postsRepository.save(post).getPostId();
     }
 
+
+    @Transactional(readOnly = true)
+    public PostEditFormResponseDto findForEdit(Long postId, Long userId){
+        Post post = postsRepository.findByIdWithUser(postId)
+                .orElseThrow(()-> new PostNotFoundException(postId));
+        if(!post.getUser().getId().equals(userId)){
+            throw new PostAccessDeniedException("작성자만 수정할 수 있습니다.");
+        }
+        return PostEditFormResponseDto.from(post);
+    }
+
+
     @Transactional
-    public Long update(Long id, PostUpdateRequestDto requestDto){
-        Post article = postsRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시물이 없습니다. id: "+ id));
+    public Long update(Long postId, PostUpdateRequestDto requestDto){
+        Post post = postsRepository.findByIdWithUser(postId)
+                .orElseThrow(()->new PostNotFoundException(postId));
 
-        article.update(requestDto.getTitle(), requestDto.getContent());
-
-        return id;
+        System.out.println(requestDto);
+        post.update(requestDto.getTitle(),requestDto.getContent(), TagType.from(requestDto.getCategory()));
+        return postId;
     }
 
     public PostResponseDto findById(Long postId){
@@ -65,11 +74,11 @@ public class PostsService {
     }
 
     @Transactional
-    public void delete(Long postId, SessionUser sessionUser){
+    public void delete(Long postId, Long userId){
         Post post = postsRepository.findByIdWithUser(postId)
                 .orElseThrow(()->new PostNotFoundException(postId));
-        if(!post.getUser().getId().equals(sessionUser.getId())){
-            throw new PostDeleteAccessDeniedException("작성자만 삭제할 수 있습니다.");
+        if(!post.getUser().getId().equals(userId)){
+            throw new PostAccessDeniedException("작성자만 삭제할 수 있습니다.");
         }
         postsRepository.delete(post);
         }

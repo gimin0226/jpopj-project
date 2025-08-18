@@ -103,7 +103,7 @@
         <li th:classappend="${activeCategory == 'TALK' ? 'active' : ''}"><a th:href="@{/TALK}">TALK</a></li>
         <li th:classappend="${activeCategory == 'CONCERT' ? 'active' : ''}"><a th:href="@{/CONCERT}">CONCERT</a></li>
         <li class="write-btn-container">
-            <a th:href="@{/write}" class="write-btn">글 작성하기</a>
+            <a th:href="@{/posts/write}" class="write-btn">글 작성하기</a>
         </li>
     </ul>
 </nav>
