@@ -65,6 +65,7 @@ public class PostsController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> delete(@PathVariable Long postId, @SessionAttribute("user") SessionUser sessionUser){
+        System.out.println("PostController의 delete()메서드 호출");
         postsService.delete(postId,sessionUser.getId());
         return ResponseEntity.noContent().build();
     }

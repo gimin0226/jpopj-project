@@ -100,6 +100,25 @@ li{list-style: none;}
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+
+    position: relative;
+}
+
+
+/* 기본 상태: 날짜 보이고 버튼 숨김 */
+.comment-meta .comment-actions {
+    display: none;
+}
+.comment-meta .comment-date {
+    display: inline;
+}
+
+/* hover 시: 날짜 숨기고 버튼 노출 */
+.comment-meta:hover .comment-date {
+    display: none;
+}
+.comment-meta:hover .comment-actions {
+    display: inline;
 }
 
 /* 댓글 내용 */

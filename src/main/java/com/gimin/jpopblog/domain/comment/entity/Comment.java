@@ -1,5 +1,6 @@
 package com.gimin.jpopblog.domain.comment.entity;
 
+import com.gimin.jpopblog.domain.user.entity.User;
 import com.gimin.jpopblog.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -15,15 +16,20 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY )
     private Long commentId;
 
-    //Post, Author 엔티티 id로 접근, 애그리거트 간 결합 방지
-    @Column(nullable = false)
+    //Post, User 엔티티 id로 접근, 애그리거트 간 결합 방지
+    @Column(name="post_id", nullable = false)
     private Long postId;
 
-    @Column(nullable = false)
+    @Column(name="user_id", nullable = false)
     private Long userId;
 
     @Column(length = 1000 , nullable = false)
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", insertable = false, updatable = false)
+    private User user; //조회 전용
+
 
     //Like 엔티티 만든 후
     //private Long likeId;
