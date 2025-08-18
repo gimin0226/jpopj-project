@@ -18,14 +18,16 @@ public class CommentResponseDto {
     private Long commentId;
     private String content;
     private LocalDateTime createdDate;
+    private Long userId;
 
     @Builder
-    public CommentResponseDto(Long commentId, Long postId, String userNickname, String content, LocalDateTime createdDate) {
+    public CommentResponseDto(Long commentId, Long postId, String userNickname, String content, LocalDateTime createdDate,Long userId) {
         this.commentId = commentId;
         this.postId = postId;
         this.content = content;
         this.createdDate = createdDate;
         this.userNickname = userNickname;
+        this.userId = userId;
     }
 
     public static CommentResponseDto of(Comment comment, String userNickname){
@@ -35,7 +37,7 @@ public class CommentResponseDto {
         dto.commentId = comment.getCommentId();
         dto.content = comment.getContent();
         dto.createdDate = comment.getCreatedDate();
-
+        dto.userId = comment.getUserId();
         return dto;
     }
 

@@ -54,9 +54,14 @@
             </div>
 
             <div th:each="comment : ${comments}" class="comment-item">
-                <div class="comment-meta">
+                <div class="comment-meta" >
                     <strong th:text="${comment.userNickname}">작성자</strong>
-                    <span th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+
+                    <span class="comment-date" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                    <div th:if="${session.user!=null and comment.userId==session.user.id}" class="comment-actions">
+                        <button class="edit-btn">수정</button>
+                        <button class="delete-btn" th:attr="data-comment-id=${comment.commentId},data-post-id=${comment.postId}">삭제</button>
+                    </div>
                 </div>
                 <div class="comment-content" th:text="${comment.content}">댓글 내용</div>
             </div>
@@ -96,6 +101,6 @@
     </div>
 
 </div>
-<script src="/js/post-delete.js"></script>
+<script src="/js/post-detail.js"></script>
 </body>
 </html>

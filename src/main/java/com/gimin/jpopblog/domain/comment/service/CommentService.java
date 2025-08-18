@@ -3,6 +3,8 @@ package com.gimin.jpopblog.domain.comment.service;
 import com.gimin.jpopblog.domain.comment.dto.CommentCreateRequestDto;
 import com.gimin.jpopblog.domain.comment.dto.CommentResponseDto;
 import com.gimin.jpopblog.domain.comment.entity.Comment;
+import com.gimin.jpopblog.domain.comment.exception.CommentAccessDeniedException;
+import com.gimin.jpopblog.domain.comment.exception.CommentNotFoundException;
 import com.gimin.jpopblog.domain.comment.repository.CommentRepository;
 import com.gimin.jpopblog.domain.user.entity.User;
 import com.gimin.jpopblog.domain.user.repository.UserRepository;
@@ -25,6 +27,7 @@ public class CommentService {
     public void create(CommentCreateRequestDto requestDto){
         commentRepository.save(requestDto.toEntity());
     }
+
 
     public List<CommentResponseDto> findByPostIdOrderedByCreatedDateAsc(Long postId){
 
@@ -57,5 +60,22 @@ public class CommentService {
                     return CommentResponseDto.of(comment,user.getNickname().getValue());
                 })
                 .toList();
+    }
+
+    @Transactional
+    public void delete(Long commentId, Long userId){
+        System.out.println("asfd");
+
+        Comment comment = commentRepository.findByIdWithUser(commentId)
+                .orElseThrow(()->new CommentNotFoundException(commentId));
+
+        if(!comment.getUserId().equals(userId)){
+            throw new CommentAccessDeniedException("작성자만 삭제할 수 있습니다.");
+        }
+
+        System.out.println("asfdasjFf");
+        commentRepository.delete(comment);
+        System.out.println("댓글이 삭제되었습니다.");
+
     }
 }
